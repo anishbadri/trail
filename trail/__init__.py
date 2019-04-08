@@ -49,21 +49,21 @@ db = SQLAlchemy(app)
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), unique=True, nullable=False)
-    author = db.Column(db.String(120), unique=True, nullable=False)
-    ISBN = db.Column(db.String(13), nullable=False)
+    # author = db.Column(db.String(120), unique=True, nullable=False)
+    # ISBN = db.Column(db.String(13), nullable=False)
     # authors = db.relationship('Author', secondary=authors, backref='books', lazy=True)
-    users = db.relationship('User', secondary='reads')
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))   
+    user = db. relationship('User', backref='reads')
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
-    books = db.relationship('Book', secondary='reads')
+    books = db.relationship('Book', backref='reader')
 
-class Reads(db.Model):
-    __TABLE__ = 'reads'
-    bookid = db.Column(db.Integer, db.ForeignKey('book.id'), primary_key=True )
-    userid = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True )
-    rating = db.Column(db.Integer)
-    user =  db.relationship(User, backref = 'books_assc')
-    book =  db.relationship(Book, backref = 'users_assc')
+# class Reads(db.Model):
+#     __TABLE__ = 'reads'
+#     bookid = db.Column(db.Integer, db.ForeignKey('book.id'), primary_key=True )
+#     userid = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True )
+#     rating = db.Column(db.Integer)
+#     user =  db.relationship(User, backref = 'books_assc')
+#     book =  db.relationship(Book, backref = 'users_assc')
