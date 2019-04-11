@@ -52,34 +52,19 @@ class Book(db.Model):
     # author = db.Column(db.String(120), unique=True, nullable=False)
     # ISBN = db.Column(db.String(13), nullable=False)
     # authors = db.relationship('Author', secondary=authors, backref='books', lazy=True)
-<<<<<<< HEAD
     # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))   
     # user = db. relationship('User', secondary='reads', backref='reads')
-=======
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))   exit
-    user = db. relationship('User', secondary='reads', backref='reads')
->>>>>>> 844a62a199ccba4a853d0b4b9011b60a6edc23a0
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
-<<<<<<< HEAD
     books = db.relationship('Book', secondary='reads', backref='readby')
 
 
-=======
-    # books = db.relationship('Book', secondary='reads')exi
->>>>>>> 844a62a199ccba4a853d0b4b9011b60a6edc23a0
 
 class Reads(db.Model):
     bookid = db.Column(db.Integer, db.ForeignKey('book.id'), primary_key=True )
     userid = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True )
-<<<<<<< HEAD
     rating = db.Column(db.Integer)
     user =  db.relationship(User, backref = 'books_assc')
     book =  db.relationship(Book, backref = 'users_assc')
-=======
-#     rating = db.Column(db.Integer)
-#     user =  db.relationship(User, backref = 'books_assc')
-#     book =  db.relationship(Book, backref = 'users_assc')
->>>>>>> 844a62a199ccba4a853d0b4b9011b60a6edc23a0
