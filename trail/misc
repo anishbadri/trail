@@ -1,0 +1,7 @@
+>> from trail import Book, User, Read
+>>> b1 = Book(title='sapiens', author='anish', ISBN='123')
+>>> b2 = Book(title='breathe', author='badri', ISBN='1234')
+>>> b3 = Book(title='air', author='ash', ISBN='123456')
+>>> u1 = User(name='anish')
+>>> u2 = User(name='badri')
+>>> u3 = User(name='Ashwin')
