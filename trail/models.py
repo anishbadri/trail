@@ -36,7 +36,9 @@ class Reads(db.Model):
     user =  db.relationship(User, backref = 'books_assc')
     book =  db.relationship(Book, backref = 'users_assc')
 
+
 # class Tag(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
 
 
 
