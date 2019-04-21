@@ -1,0 +1,26 @@
+<head>
+<title>Books API Example</title>
+</head>
+<body>
+    <input type="text" name="search" id="text-box">
+<div id="content"></div>
+<script>
+    function handleResponse(response) {
+    for (var i = 0; i < response.items.length; i++) {
+    var item = response.items[i];
+    // in production code, item.text should have the HTML entities escaped.
+    document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title;
+    }
+}
+const end = 'https://www.googleapis.com/books/v1/volumes?q=intitle:flow%20happiness'
+    books = []
+    fetch(end)
+        .then(blob => blob.json())
+        .then(data => books.push(...data.items));
+        // .then(book => console.log(book.items[0]))
+    console.log(books)
+
+
+</script>
+<script src="https://www.googleapis.com/books/v1/volumes?q=intitle:Thinking+fast+and+slow&callback=handleResponse"></script>
+</body>

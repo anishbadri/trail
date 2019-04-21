@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     books = db.relationship('Book', secondary='reads', backref='readby')
 
     def __repr__(self):
-        return f"User('{self.username}')"
+        return "User('{self.username}')"
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)

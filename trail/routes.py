@@ -1,9 +1,16 @@
 from trail import db, app
 from flask import render_template, url_for, flash, redirect, request
 from trail.models import User, Book, Author, Reads
-from trail.forms import RegistrationForm, LoginForm, AddBook
+from trail.forms import RegistrationForm, LoginForm, AddBook, SearchBook
 from flask_login import login_user, current_user, logout_user, login_required
+import requests
+import urllib.parse
 
+
+class newbook:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author 
 
 
 @app.route('/')
@@ -57,6 +64,35 @@ def addbook():
     
     return render_template('addbook.html', form=form)
 
+@app.route('/book/<int:book_id>', methods=['GET', 'POST'])
+def book(book_id):
+    book = Book.query.get_or_404(book_id)
+    return render_template('book.html', book = book)
 
 
 
+@app.route('/searchbook', methods=['GET', 'POST'])
+def searchbook():
+    form = SearchBook()  
+    if form.validate_on_submit():
+        search = form.title.data
+        constlink = 'https://www.googleapis.com/books/v1/volumes?'
+        link = constlink + urllib.parse.urlencode({'q': search})
+        
+        newstr = requests.get(link).json()
+        print(type(newstr['items']))
+        searchedBook = newbook(newstr['items'][0]['volumeInfo']['title'],newstr['items'][0]['volumeInfo']['authors'])
+        isbn = newstr['items'][0]['id']
+        return render_template('searchbook.html', form = form, data=searchedBook, isbn = isbn)
+    return render_template('searchbook.html', form = form, data=None, )
+
+@app.route('/displaybook/<book>')
+def displayBook(book):
+    print(book.title)
+    return render_template('displayBook.html', book=book)
+
+@app.route('/addnewBook/<data>')
+def addnewBook(data):
+    link = 'https://www.googleapis.com/books/v1/volumes/' + data
+    jsondata = requests.get(link).json()
+    return render_template('displayBook.html', book=jsondata)

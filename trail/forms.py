@@ -29,3 +29,8 @@ class AddBook(FlaskForm):
     authors = StringField('Author', validators=[DataRequired()])
     rating = IntegerField('Book Rating', validators=[DataRequired()])
     submit = SubmitField('Add Book')
+
+
+class SearchBook(FlaskForm):
+    title = StringField('Book title', validators=[DataRequired()])
+    submit = SubmitField('Search for Books')
