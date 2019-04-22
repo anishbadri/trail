@@ -14,13 +14,18 @@
     </form>
     <div>
         {% if data != None %}
-            {{data}}
-            {{data.title}}
-            {{data.author}}
-            {{isbn}}
-            <a href= "{{ url_for('addnewBook', data = isbn) }}" class='btn btn-outline-info'>Add Book</a>
+            <div class="media content-section ">
+                <img src={{data.image}} class="img-thumbnail">
+                <div class="pl-3">
+                    <h2>{{data.title}}</h2>
+                    <p>by {{ data.author }}</p>
+                    <a href= "{{ url_for('addnewBook', data = isbn) }}" class='btn btn-outline-info'>Add Book to your List</a>
+                </div>
+            </div>
+            
         {% endif %}
     </div>
+ 
     <div id ="jsondata">
 
     </div>

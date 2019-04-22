@@ -7,10 +7,11 @@ import requests
 import urllib.parse
 
 
-class newbook:
-    def __init__(self, title, author):
+class bookDetails:
+    def __init__(self, title, author, image):
         self.title = title
         self.author = author 
+        self.image = image
 
 
 @app.route('/')
@@ -81,7 +82,10 @@ def searchbook():
         
         newstr = requests.get(link).json()
         print(type(newstr['items']))
-        searchedBook = newbook(newstr['items'][0]['volumeInfo']['title'],newstr['items'][0]['volumeInfo']['authors'])
+        title = newstr['items'][0]['volumeInfo']['title']
+        authors = ", ".join(newstr['items'][0]['volumeInfo']['authors'])
+        image = newstr['items'][0]['volumeInfo']['imageLinks']['smallThumbnail']
+        searchedBook = bookDetails(title,authors, image)
         isbn = newstr['items'][0]['id']
         return render_template('searchbook.html', form = form, data=searchedBook, isbn = isbn)
     return render_template('searchbook.html', form = form, data=None, )
@@ -96,3 +100,11 @@ def addnewBook(data):
     link = 'https://www.googleapis.com/books/v1/volumes/' + data
     jsondata = requests.get(link).json()
     return render_template('displayBook.html', book=jsondata)
+
+def getBookData(data):
+    title = data['items'][0]['volumeInfo']['title']
+    authors = data['items'][0]['volumeInfo']['authors']
+    # image = data['items'][]
+    # image = 
+    # book = displayBook()
+
