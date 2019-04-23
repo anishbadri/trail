@@ -1,6 +1,6 @@
 from trail import db, app
 from flask import render_template, url_for, flash, redirect, request
-from trail.models import User, Book, Author, Reads
+from trail.models import User, Book, Author, Reads, AuthorBooks
 from trail.forms import RegistrationForm, LoginForm, AddBook, SearchBook
 from flask_login import login_user, current_user, logout_user, login_required
 import requests
@@ -21,7 +21,7 @@ class storeBook:
         self.authors = authors
         self.imageLink = imageLink
         self.isbn = isbn
-        self.googleID = id
+        self.googleid = id
 
 @app.route('/')
 def home():
@@ -82,6 +82,7 @@ def book(book_id):
 
 
 @app.route('/searchbook', methods=['GET', 'POST'])
+@login_required
 def searchbook():
     form = SearchBook()  
     if form.validate_on_submit():
@@ -105,12 +106,23 @@ def displayBook(book):
     return render_template('displayBook.html', book=book)
 
 @app.route('/addnewBook/<data>')
+@login_required
 def addnewBook(data):
     link = 'https://www.googleapis.com/books/v1/volumes/' + data
     jsondata = requests.get(link).json()
     newbook=getBookData(jsondata)
-    Book(title=newbook.title, subtitle=newbook.subtitle, imageLink = newbook.imageLink)
-    return render_template('displayBook.html',  book=getBookData(jsondata))
+    bookAuthor = Author
+    book = Book(title=newbook.title, subtitle=newbook.subtitle, imageLink = newbook.imageLink, googleid = newbook.googleid, isbn=newbook.isbn)
+    for author in newbook.authors:
+        bookAuthor = Author(name = author)
+        db.session.add(AuthorBooks(author=bookAuthor, books = book))
+    userbook = Reads(user = current_user, book = book)
+    db.session.add(userbook)
+    db.session.commit()
+
+    dbbook = Book.query.filter_by(title = newbook.title).first()
+    
+    return render_template('displayBook.html',  book=dbbook, user = current_user)
 
 def getBookData(data):
     title = data['volumeInfo']['title']
@@ -127,3 +139,8 @@ def getBookData(data):
     # image = 
     # book = displayBook()
 
+@app.route('/<int:userid>/books')
+@login_required
+def displayuserbook(userid):
+    user = User.query.filter_by(id = userid).first()
+    return render_template('displayUserBooks.html', user = user)

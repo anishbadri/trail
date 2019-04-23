@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    books = db.relationship('Book', secondary='reads', backref='readby')
+    books = db.relationship('Book', secondary='reads', backref='readby', lazy='dynamic')
 
     def __repr__(self):
         return "User('{self.username}')"
@@ -20,7 +20,7 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     subtitle = db.Column(db.String(200))
-    imagelink =  db.Column(db.String(400))
+    imageLink =  db.Column(db.String(400))
     googleid = db.Column(db.String(20), unique=True)
     # author = db.Column(db.String(120), unique=True, nullable=False)
     isbn = db.Column(db.String(13))
