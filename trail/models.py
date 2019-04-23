@@ -18,9 +18,12 @@ class User(db.Model, UserMixin):
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20), unique=True, nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    subtitle = db.Column(db.String(200))
+    imagelink =  db.Column(db.String(400))
+    googleid = db.Column(db.String(20), unique=True)
     # author = db.Column(db.String(120), unique=True, nullable=False)
-    ISBN = db.Column(db.String(13))
+    isbn = db.Column(db.String(13))
     authors = db.relationship('Author', secondary='author_books', backref='books')
     # authors = db.relationship('Author', secondary=authors, backref='books', lazy=True)
     # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))   

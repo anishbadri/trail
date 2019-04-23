@@ -14,6 +14,15 @@ class bookDetails:
         self.image = image
 
 
+class storeBook:
+    def __init__(self, title, subtitle, authors, imageLink, isbn, id):
+        self.title = title
+        self.subtitle = subtitle
+        self.authors = authors
+        self.imageLink = imageLink
+        self.isbn = isbn
+        self.googleID = id
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -99,11 +108,21 @@ def displayBook(book):
 def addnewBook(data):
     link = 'https://www.googleapis.com/books/v1/volumes/' + data
     jsondata = requests.get(link).json()
-    return render_template('displayBook.html', book=jsondata)
+    newbook=getBookData(jsondata)
+    Book(title=newbook.title, subtitle=newbook.subtitle, imageLink = newbook.imageLink)
+    return render_template('displayBook.html',  book=getBookData(jsondata))
 
 def getBookData(data):
-    title = data['items'][0]['volumeInfo']['title']
-    authors = data['items'][0]['volumeInfo']['authors']
+    title = data['volumeInfo']['title']
+    subtitle = data['volumeInfo']['subtitle']
+    isbn = data['volumeInfo']['industryIdentifiers'][1]['identifier']
+    image = data['volumeInfo']['imageLinks']['smallThumbnail']
+    authors = data['volumeInfo']['authors']
+    googleid = data['id']
+    newBook = storeBook(title,subtitle,authors,image,isbn, googleid)
+
+    return newBook
+
     # image = data['items'][]
     # image = 
     # book = displayBook()
