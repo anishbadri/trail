@@ -1,3 +1,15 @@
-{% for book in user.books %}
-    {{ book.title }}
-{% endfor %}
+{% extends "layout.html" %}
+{% block content %}
+    {% for book in user.books %}
+        <div class="media content-section ">
+            <img src={{book.imageLink}} class="img-thumbnail" style="width:100px">
+            <div class="pl-3">
+                <h2>{{book.title}}</h2>
+                <p>by {% for author in book.authors %}
+                        {{ author.name }}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}
