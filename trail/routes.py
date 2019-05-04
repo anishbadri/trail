@@ -111,14 +111,23 @@ def addnewBook(data):
     link = 'https://www.googleapis.com/books/v1/volumes/' + data
     jsondata = requests.get(link).json()
     newbook=getBookData(jsondata)
-    bookAuthor = Author
-    book = Book(title=newbook.title, subtitle=newbook.subtitle, imageLink = newbook.imageLink, googleid = newbook.googleid, isbn=newbook.isbn)
-    for author in newbook.authors:
-        bookAuthor = Author(name = author)
-        db.session.add(AuthorBooks(author=bookAuthor, books = book))
-    userbook = Reads(user = current_user, book = book)
-    db.session.add(userbook)
-    db.session.commit()
+    if Book.query.filter_by(googleid = newbook.googleid).first() == None:
+        book = Book(title=newbook.title, subtitle=newbook.subtitle, imageLink = newbook.imageLink, googleid = newbook.googleid, isbn=newbook.isbn)
+        for author in newbook.authors:
+            if Author.query.filter_by(name = author).first() == None:
+                bookAuthor = Author(name = author)
+                db.session.add(AuthorBooks(author=bookAuthor, books = book))
+            else:
+                bookAuthor = Author.query.filter_by(name = author).first()
+                db.session.add(AuthorBooks(author=bookAuthor, books = book))
+        userbook = Reads(user = current_user, book = book)
+        db.session.add(userbook)
+        db.session.commit()
+    
+    else:
+        #The book is in the dabase
+        #can add a flash message here for  that
+        pass
 
     dbbook = Book.query.filter_by(title = newbook.title).first()
     
@@ -126,7 +135,7 @@ def addnewBook(data):
 
 def getBookData(data):
     title = data['volumeInfo']['title']
-    subtitle = data['volumeInfo']['subtitle']
+    subtitle = data['volumeInfo']['subtitle'] if 'subtitle' in data['volumeInfo'] else None
     isbn = data['volumeInfo']['industryIdentifiers'][1]['identifier']
     image = data['volumeInfo']['imageLinks']['smallThumbnail']
     authors = data['volumeInfo']['authors']

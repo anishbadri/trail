@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     books = db.relationship('Book', secondary='reads', backref='readby', lazy='dynamic')
+    
 
     def __repr__(self):
         return "User('{self.username}')"
